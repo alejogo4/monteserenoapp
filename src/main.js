@@ -1,4 +1,2 @@
-import './index.html';
-import testModule from './scripts/module-a';
-
-testModule.test();
+import "./index.html";
+import index from "./scripts/index";

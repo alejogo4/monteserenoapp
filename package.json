@@ -18,14 +18,18 @@
         "build:production": "webpack --config webpack/webpack.config.js --env production",
         "watch": "npm run build:development -- -w",
         "start": "http-server dist/ -c-1",
-        "dev": "webpack-dev-server --config webpack/webpack.config.js"
+        "dev": "webpack-dev-server --config webpack/webpack.config.js --open --hot"
     },
     "devDependencies": {
         "@babel/core": "^7.16.7",
         "@babel/preset-env": "^7.16.8",
         "babel-loader": "^8.2.3",
+        "css-loader": "^6.7.1",
         "file-loader": "^6.2.0",
         "http-server": "^14.1.0",
+        "sass-loader": "^13.0.2",
+        "style-loader": "^3.3.1",
+        "svg-inline-loader": "^0.8.2",
         "webpack": "^5.66.0",
         "webpack-bundle-analyzer": "^4.5.0",
         "webpack-cli": "^4.9.1",
@@ -35,5 +39,19 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/piecioshka/boilerplate-webpack-babel"
+    },
+    "dependencies": {
+        "corslite": "^0.0.7",
+        "file-saver": "^2.0.5",
+        "jsonp": "^0.2.1",
+        "jxon": "^2.0.0-beta.5",
+        "leaflet": "^1.9.2",
+        "leaflet-control-geocoder": "^2.4.0",
+        "leaflet-rotate-map": "^0.2.6",
+        "leaflet-routing-machine": "^3.2.12",
+        "leaflet.locatecontrol": "^0.76.1",
+        "local-storage": "^2.0.0",
+        "osrm-text-instructions": "^0.14.1-beta.3",
+        "qs": "^6.11.0"
     }
 }

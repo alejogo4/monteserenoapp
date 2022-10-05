@@ -46,6 +46,7 @@ var map = L.map("map", {
     dragging: true,
     layers: layers,
     maxZoom: 18,
+    rotate: true,
 }).setView(mergedOptions.center, mergedOptions.zoom);
 
 // Pass basemap layers
@@ -83,26 +84,10 @@ map.on("overlayremove", function (e) {
 
 /* OSRM setup */
 var ReversablePlan = L.Routing.Plan.extend({
-    createGeocoder: L.bind(function (i) {
-        var geocoder =
-            L.Routing.GeocoderElement.prototype.options.createGeocoder.call(
-                this,
-                i,
-                this.getPlan().getWaypoints().length,
-                this.getPlan().options
-            );
-        var handle = L.DomUtil.create("div", "geocoder-handle");
-        var geolocateBtn = L.DomUtil.create(
-            "span",
-            "geocoder-geolocate-btn",
-            geocoder.container
-        );
-
-        handle.innerHTML = String.fromCharCode(65 + i);
-        geocoder.container.insertBefore(handle, geocoder.container.firstChild);
-
-        return geocoder;
-    }, this),
+    createGeocoders: function () {
+        var container = L.Routing.Plan.prototype.createGeocoders.call(this);
+        return container;
+    },
 });
 
 /* Setup markers */
@@ -135,9 +120,7 @@ function makeIcon(i, n) {
 }
 
 var plan = new ReversablePlan([], {
-    geocoder: L.Control.Geocoder.nominatim({
-        geocodingQueryParams: { countrycodes: "ca" },
-    }),
+    geocoder: L.Control.Geocoder.nominatim(),
     routeWhileDragging: true,
     createMarker: function (i, wp, n) {
         var options = {
@@ -188,7 +171,7 @@ var controlOptions = {
     containerClassName: options.lrm.containerClassName,
     alternativeClassName: options.lrm.alternativeClassName,
     stepClassName: options.lrm.stepClassName,
-    language: "en", // we are injecting own translations via osrm-text-instructions
+    language: "es", // we are injecting own translations via osrm-text-instructions
     showAlternatives: options.lrm.showAlternatives,
     units: mergedOptions.units,
     serviceUrl: leafletOptions.services[0].path,
@@ -215,15 +198,6 @@ router._convertRoute = function (responseRoute) {
     var resp = this._convertRouteOriginal(responseRoute);
 
     if (resp.instructions && resp.instructions.length) {
-        var i = 0;
-        responseRoute.legs.forEach(function (leg) {
-            leg.steps.forEach(function (step) {
-                // abusing the text property to save the original osrm step
-                // for later use in the itnerary builder
-                resp.instructions[i].text = step;
-                i++;
-            });
-        });
     }
 
     return resp;
