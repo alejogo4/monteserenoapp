@@ -96,10 +96,10 @@ var ReversablePlan = L.Routing.Plan.extend({
 
 /* Setup markers */
 function makeIcon(i, n) {
-    var url = "images/marker-via-icon-2x.png";
+    var url = "./images/content/marker-via-icon-2x.png";
     var markerList = [
-        "images/marker-start-icon-2x.png",
-        "images/marker-end-icon-2x.png",
+        "./images/content/marker-start-icon-2x.png",
+        "./images/content/marker-end-icon-2x.png",
     ];
     if (i === 0) {
         return L.icon({
@@ -342,6 +342,8 @@ L.control
 var finalDestinyLat = null;
 var finalDestinyLong = null;
 
+var markerRotate = null;
+
 addWaypoint();
 
 function addCustomWaypoint(origin, destination) {
@@ -365,7 +367,17 @@ var id;
 var target;
 var options;
 
+const isIOS =
+    navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
+    navigator.userAgent.match(/AppleWebKit/);
+
 function success(pos) {
+    if (!markerRotate) {
+        markerRotate = document.querySelectorAll("leaflet-marker-icon");
+    } else {
+        init();
+    }
+
     const crd = pos.coords;
     initLatitude = crd.latitude;
     initLongitude = crd.longitude;
@@ -403,41 +415,75 @@ options = {
 
 id = navigator.geolocation.watchPosition(success, error, options);
 
-//============
-function motion(event) {
-    document.querySelector[0]("accelerometer").innerHTML =
-        "Accelerometer: " +
-        event.accelerationIncludingGravity.x +
-        ", " +
-        event.accelerationIncludingGravity.y +
-        ", " +
-        event.accelerationIncludingGravity.z;
-}
+function init() {
+    setTimeout(startCompass, 4000);
+    //startBtn.addEventListener("click", startCompass);
+    navigator.geolocation.getCurrentPosition(locationHandler);
 
-function orientation(event) {
-    document.querySelector[0]("magnetometer").innerHTML =
-        "Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma;
-}
-
-function go() {
-    if (window.DeviceMotionEvent) {
-        window.addEventListener("devicemotion", motion, false);
-    } else {
-        var status = document.getElementById("status");
-        status.innerHTML = status.innerHTML.replace(
-            "is supported",
-            "is not supported"
-        );
-    }
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", orientation, false);
-    } else {
-        var status = document.getElementById("status");
-        status.innerHTML = status.innerHTML.replace(
-            "is supported",
-            "is not supported"
-        );
+    if (!isIOS) {
+        window.addEventListener("deviceorientationabsolute", handler, true);
     }
 }
 
-go();
+function startCompass() {
+    if (isIOS) {
+        DeviceOrientationEvent.requestPermission()
+            .then((response) => {
+                if (response === "granted") {
+                    window.addEventListener("deviceorientation", handler, true);
+                } else {
+                    alert("has to be allowed!");
+                }
+            })
+            .catch(() => alert("not supported"));
+    }
+}
+
+function handler(e) {
+    compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+    markerRotate[0].style.transform = `translate(-50%, -50%) rotate(${-compass}deg)`;
+
+    // ±15 degree
+    if (
+        (pointDegree < Math.abs(compass) &&
+            pointDegree + 15 > Math.abs(compass)) ||
+        pointDegree > Math.abs(compass + 15) ||
+        pointDegree < Math.abs(compass)
+    ) {
+        //myPoint.style.opacity = 0;
+    } else if (pointDegree) {
+        //myPoint.style.opacity = 1;
+    }
+}
+
+let pointDegree;
+
+function locationHandler(position) {
+    const { latitude, longitude } = position.coords;
+    pointDegree = calcDegreeToPoint(latitude, longitude);
+
+    if (pointDegree < 0) {
+        pointDegree = pointDegree + 360;
+    }
+}
+
+function calcDegreeToPoint(latitude, longitude) {
+    // Qibla geolocation
+    const point = {
+        lat: 21.422487,
+        lng: 39.826206,
+    };
+
+    const phiK = (point.lat * Math.PI) / 180.0;
+    const lambdaK = (point.lng * Math.PI) / 180.0;
+    const phi = (latitude * Math.PI) / 180.0;
+    const lambda = (longitude * Math.PI) / 180.0;
+    const psi =
+        (180.0 / Math.PI) *
+        Math.atan2(
+            Math.sin(lambdaK - lambda),
+            Math.cos(phi) * Math.tan(phiK) -
+                Math.sin(phi) * Math.cos(lambdaK - lambda)
+        );
+    return Math.round(psi);
+}
