@@ -32,7 +32,6 @@ function showPosition(position) {
 }
 
 // load only after language was chosen
-var itineraryBuilder = require("./itinerary_builder")(mergedOptions.language);
 
 var mapLayer = leafletOptions.layer;
 var overlay = leafletOptions.overlay;
@@ -47,6 +46,11 @@ var map = L.map("map", {
     layers: layers,
     maxZoom: 18,
     rotate: true,
+    touchRotate: true,
+    rotateControl: {
+        closeOnZeroBearing: false,
+    },
+    bearing: 30,
 }).setView(mergedOptions.center, mergedOptions.zoom);
 
 // Pass basemap layers
@@ -100,8 +104,9 @@ function makeIcon(i, n) {
     if (i === 0) {
         return L.icon({
             iconUrl: markerList[0],
-            iconSize: [20, 56],
-            iconAnchor: [10, 28],
+            iconSize: [30, 30],
+            iconAnchor: [10, 10],
+            rotationAngle: 90,
         });
     }
     if (i === n - 1) {
@@ -109,12 +114,14 @@ function makeIcon(i, n) {
             iconUrl: markerList[1],
             iconSize: [20, 56],
             iconAnchor: [10, 28],
+            rotationAngle: 45,
         });
     } else {
         return L.icon({
             iconUrl: url,
             iconSize: [20, 56],
             iconAnchor: [10, 28],
+            rotationAngle: 45,
         });
     }
 }
@@ -158,8 +165,6 @@ var plan = new ReversablePlan([], {
         }
     },
 });
-
-L.extend(L.Routing, itineraryBuilder);
 
 // add marker labels
 var controlOptions = {
@@ -344,26 +349,6 @@ function addCustomWaypoint(origin, destination) {
     lrmControl.spliceWaypoints(1, 1, destination);
 }
 
-/*
-setInterval(function () {
-  navigator.geolocation.getCurrentPosition(showPosition);
-  //addWaypoint();
-  if (localStorage.getItem("point")) {
-    var point = JSON.parse(localStorage.getItem("point"));
-    if (finalDestinyLat != point.lat) {
-      finalDestinyLat = point.lat;
-      finalDestinyLong = point.lan;
-    }
-  }
-  if (finalDestinyLat && finalDestinyLong) {
-    console.log(finalDestinyLat, finalDestinyLong);
-    addCustomWaypoint(
-      L.latLng(initLatitude, initLongitude),
-      L.latLng(finalDestinyLat, finalDestinyLong)
-    );
-  }
-}, 2000);*/
-
 var url = new URL(window.location.href);
 
 if (!url.searchParams.get("srv")) {
@@ -417,3 +402,42 @@ options = {
 };
 
 id = navigator.geolocation.watchPosition(success, error, options);
+
+//============
+function motion(event) {
+    document.querySelector[0]("accelerometer").innerHTML =
+        "Accelerometer: " +
+        event.accelerationIncludingGravity.x +
+        ", " +
+        event.accelerationIncludingGravity.y +
+        ", " +
+        event.accelerationIncludingGravity.z;
+}
+
+function orientation(event) {
+    document.querySelector[0]("magnetometer").innerHTML =
+        "Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma;
+}
+
+function go() {
+    if (window.DeviceMotionEvent) {
+        window.addEventListener("devicemotion", motion, false);
+    } else {
+        var status = document.getElementById("status");
+        status.innerHTML = status.innerHTML.replace(
+            "is supported",
+            "is not supported"
+        );
+    }
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", orientation, false);
+    } else {
+        var status = document.getElementById("status");
+        status.innerHTML = status.innerHTML.replace(
+            "is supported",
+            "is not supported"
+        );
+    }
+}
+
+go();

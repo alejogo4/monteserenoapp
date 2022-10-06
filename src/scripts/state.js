@@ -73,6 +73,22 @@ var State = L.Class.extend({
         var container = document.getElementsByClassName(
             "leaflet-control-container"
         )[0];
+
+        var el1 = L.DomUtil.create("div", "accelerometer", container);
+
+        var el2 = L.DomUtil.create("div", "magnetometer", container);
+
+        Object.assign(el1.style, {
+            position: "absolute",
+            zIndex: "9999",
+        });
+
+        Object.assign(el2.style, {
+            position: "absolute",
+            zIndex: "9999",
+            top: 50,
+        });
+
         var url = new URL(window.location.href);
         var srvActive = url.searchParams.get("srv");
 
