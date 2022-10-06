@@ -81,12 +81,15 @@ var State = L.Class.extend({
         Object.assign(el1.style, {
             position: "absolute",
             zIndex: "9999",
+            top: "0px",
+            left: "2px",
         });
 
         Object.assign(el2.style, {
             position: "absolute",
             zIndex: "9999",
-            top: 50,
+            top: "50px",
+            left: "2px",
         });
 
         var url = new URL(window.location.href);
