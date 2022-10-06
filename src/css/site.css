@@ -1220,5 +1220,5 @@ td.distance {
 }
 
 .hover-button {
-  filter: invert();
+  /* filter: invert(); */
 }

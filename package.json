@@ -1,58 +1,96 @@
 {
-    "private": true,
-    "name": "boilerplate-webpack-babel",
-    "version": "1.2.1",
-    "description": "Starter with Webpack & Babel.js",
-    "license": "MIT",
-    "author": {
-        "name": "Piotr Kowalski",
-        "email": "piecioshka@gmail.com",
-        "url": "https://piecioshka.pl"
-    },
-    "scripts": {
-        "clear": "rm -rf dist/",
-        "clear:all": "rm -rf node_modules/ && npm run clear",
-        "prebuild": "npm run clear",
-        "build": "npm run build:development",
-        "build:development": "webpack --config webpack/webpack.config.js",
-        "build:production": "webpack --config webpack/webpack.config.js --env production",
-        "watch": "npm run build:development -- -w",
-        "start": "http-server dist/ -c-1",
-        "dev": "webpack-dev-server --config webpack/webpack.config.js --open --hot"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.16.7",
-        "@babel/preset-env": "^7.16.8",
-        "babel-loader": "^8.2.3",
-        "css-loader": "^6.7.1",
-        "file-loader": "^6.2.0",
-        "http-server": "^14.1.0",
-        "sass-loader": "^13.0.2",
-        "style-loader": "^3.3.1",
-        "svg-inline-loader": "^0.8.2",
-        "webpack": "^5.66.0",
-        "webpack-bundle-analyzer": "^4.5.0",
-        "webpack-cli": "^4.9.1",
-        "webpack-dev-server": "^4.7.3",
-        "webpack-merge": "^5.8.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/piecioshka/boilerplate-webpack-babel"
-    },
-    "dependencies": {
-        "corslite": "^0.0.7",
-        "file-saver": "^2.0.5",
-        "jsonp": "^0.2.1",
-        "jxon": "^2.0.0-beta.5",
-        "leaflet": "^1.9.2",
-        "leaflet-control-geocoder": "^2.4.0",
-        "leaflet-rotate-map": "^0.2.6",
-        "leaflet-rotatedmarker": "^0.2.0",
-        "leaflet-routing-machine": "^3.2.12",
-        "leaflet.locatecontrol": "^0.76.1",
-        "local-storage": "^2.0.0",
-        "osrm-text-instructions": "^0.14.1-beta.3",
-        "qs": "^6.11.0"
+  "author": "Montesereno",
+  "name": "Montesereno app",
+  "version": "5.14.0",
+  "description": "App montesereno",
+  "browserslist": [
+    "last 2 versions",
+    "> 5%"
+  ],
+  "bugs": {
+    "url": "https://github.com/WeAreAthlon/frontend-webpack-boilerplate/issues",
+    "email": "plamen@athlonsofia.com"
+  },
+  "contributors": [
+    {
+      "name": "Alejandro Giraldo Duque",
+      "email": "alejogo49@gmail.com"
     }
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.0",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^4.0.0",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "html-webpack-plugin": "^5.5.0",
+    "image-minimizer-webpack-plugin": "^3.2.3",
+    "imagemin": "^8.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-jpegtran": "^7.0.0",
+    "imagemin-optipng": "^8.0.0",
+    "imagemin-svgo": "^10.0.1",
+    "mini-css-extract-plugin": "^2.4.4",
+    "postcss": "^8.3.11",
+    "postcss-loader": "^7.0.0",
+    "sass": "^1.50.1",
+    "sass-lint": "^1.13.1",
+    "sass-loader": "^13.0.0",
+    "terser-webpack-plugin": "^5.2.5",
+    "webpack": "^5.72.0",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.8.1",
+    "webpack-merge": "^5.8.0"
+  },
+  "engines": {
+    "node": "^12 || >=14"
+  },
+  "keywords": [
+    "webpack",
+    "boilerplate",
+    "template",
+    "setup"
+  ],
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:WeAreAthlon/frontend-webpack-boilerplate.git"
+  },
+  "scripts": {
+    "build": "webpack --config configuration/webpack.dev.config.js --mode=development",
+    "watch": "webpack --config configuration/webpack.dev.config.js --mode=development --watch",
+    "bundle": "npm install && npm run watch",
+    "dev": "webpack serve --config configuration/webpack.dev.config.js --mode=development",
+    "production": "webpack --config configuration/webpack.prod.config.js --mode=production",
+    "lint:sass": "sass-lint -v -q",
+    "lint:js": "eslint --ext .js src/js/",
+    "stats": "webpack --config configuration/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json"
+  },
+  "target": "web",
+  "dependencies": {
+    "corslite": "^0.0.7",
+    "file-saver": "^2.0.5",
+    "jsonp": "^0.2.1",
+    "jxon": "^2.0.0-beta.5",
+    "leaflet": "^1.9.2",
+    "leaflet-control-geocoder": "^2.4.0",
+    "leaflet-rotate-map": "^0.2.6",
+    "leaflet-rotatedmarker": "^0.2.0",
+    "leaflet-routing-machine": "^3.2.12",
+    "leaflet.locatecontrol": "^0.76.1",
+    "local-storage": "^2.0.0",
+    "osrm-text-instructions": "^0.14.1-beta.3",
+    "qs": "^6.11.0"
+  }
 }
