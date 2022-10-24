@@ -130,7 +130,7 @@ var Control = L.Control.extend({
             "Prueba escribir el lote hacia donde te diriges ej: Lote 123";
         L.DomEvent.on(
             input,
-            "keypress",
+            "keyup",
             function (e) {
                 var term =
                     document.getElementsByClassName("share-container")[0].value;
@@ -155,6 +155,7 @@ var Control = L.Control.extend({
                         input.value = _finded.lote;
                         result.innerHTML = "";
                         localStorage.setItem("point", JSON.stringify(_finded));
+                        window.location = "/";
                     });
                 });
             },

@@ -14,6 +14,9 @@ var localization = require("./localization");
 var rotate = require("leaflet-rotate-map");
 var Compass = require("leaflet-compass");
 require("./polyfill");
+import { speechText } from "./speech";
+
+var nameLastSpeech = "";
 
 var parsedOptions = links.parse(window.location.search.slice(1));
 var mergedOptions = L.extend(leafletOptions.defaultState, parsedOptions);
@@ -205,6 +208,12 @@ router._convertRoute = function (responseRoute) {
     var resp = this._convertRouteOriginal(responseRoute);
 
     if (resp.instructions && resp.instructions.length) {
+        var i = 0;
+        const value = resp.instructions[0].text;
+        if (resp && value != nameLastSpeech) {
+            nameLastSpeech = value;
+            speechText(value);
+        }
     }
 
     return resp;
