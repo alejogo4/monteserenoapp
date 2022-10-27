@@ -86,7 +86,7 @@
     "leaflet": "^1.9.2",
     "leaflet-compass": "^1.5.4",
     "leaflet-control-geocoder": "^2.4.0",
-    "leaflet-rotate-map": "^0.2.6",
+    "leaflet-rotate": "^0.1.4",
     "leaflet-rotatedmarker": "^0.2.0",
     "leaflet-routing-machine": "^3.2.12",
     "leaflet.locatecontrol": "^0.76.1",

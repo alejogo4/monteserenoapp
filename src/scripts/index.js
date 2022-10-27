@@ -11,7 +11,6 @@ var ls = require("local-storage");
 var tools = require("./tools");
 var state = require("./state");
 var localization = require("./localization");
-var rotate = require("leaflet-rotate-map");
 var Compass = require("leaflet-compass");
 require("./polyfill");
 import { speechText } from "./speech";
@@ -57,6 +56,9 @@ var map = L.map("map", {
     },
     bearing: 30,
 }).setView(mergedOptions.center, mergedOptions.zoom);
+
+//map.setBearing(30);
+//map.touchRotate.enable();
 
 // Pass basemap layers
 mapLayer = mapLayer.reduce(function (title, layer) {
