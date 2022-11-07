@@ -53,10 +53,9 @@ var map = L.map("map", {
     rotate: true,
     touchRotate: true,
     rotateControl: true,
-    bearing: 30,
 }).setView(mergedOptions.center, mergedOptions.zoom);
 
-//map.setBearing(30);
+map.setBearing(180);
 //map.touchRotate.enable();
 
 // Pass basemap layers
@@ -143,7 +142,7 @@ var plan = new ReversablePlan([], {
         var marker = L.marker(wp.latLng, options);
 
         marker.on("click", function () {
-            plan.spliceWaypoints(i, 1);
+            //plan.spliceWaypoints(i, 1);
         });
         return marker;
     },
@@ -211,6 +210,7 @@ router._convertRoute = function (responseRoute) {
     if (resp.instructions && resp.instructions.length) {
         var i = 0;
         const value = resp.instructions[0].text;
+
         if (resp && value != nameLastSpeech) {
             nameLastSpeech = value;
             speechText(value);
@@ -330,10 +330,6 @@ plan.on("waypointschanged", function (e) {
         toolsControl.setRouteGeoJSON(null);
     }
 });
-
-var comp = new L.Control.Compass({ autoActive: true, showDigit: true });
-
-map.addControl(comp);
 
 L.control
     .locate({
