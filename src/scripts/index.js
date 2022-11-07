@@ -11,7 +11,7 @@ var ls = require("local-storage");
 var tools = require("./tools");
 var state = require("./state");
 var localization = require("./localization");
-var Compass = require("leaflet-compass");
+require("leaflet-rotate");
 require("./polyfill");
 import { speechText } from "./speech";
 
@@ -45,27 +45,14 @@ var baselayer = ls.get("layer")
 var layers =
     (ls.get("getOverlay") && [baselayer, overlay["hiking"]]) || baselayer;
 
-var esri = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {
-        id: "mapbox.streets",
-        maxZoom: 24,
-        maxNativeZoom: 18,
-        attribution:
-            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-    }
-);
-
 var map = L.map("map", {
     zoomControl: true,
     dragging: true,
-    layers: [esri],
+    layers: layers,
     maxZoom: 18,
     rotate: true,
     touchRotate: true,
-    rotateControl: {
-        closeOnZeroBearing: false,
-    },
+    rotateControl: true,
     bearing: 30,
 }).setView(mergedOptions.center, mergedOptions.zoom);
 
