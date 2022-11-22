@@ -55,7 +55,7 @@ var map = L.map("map", {
     rotateControl: true,
 }).setView(mergedOptions.center, mergedOptions.zoom);
 
-map.setBearing(180);
+//map.setBearing(180);
 //map.touchRotate.enable();
 
 // Pass basemap layers
